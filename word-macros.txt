@@ -1,0 +1,144 @@
+Public Sub splitit()
+
+Dim rowcount As Integer
+rowcount = ActiveDocument.Tables(1).Rows.Count
+For i = rowcount To 2 Step -1
+ActiveDocument.Tables(1).Rows(i).Select
+Selection.SplitTable
+Debug.Print "DONE"
+Next
+End Sub
+
+Sub newtrick()
+Dim tabcount As Integer
+tabcount = ActiveDocument.Tables.Count
+
+Rem For i = 1 To tabcount
+ActiveDocument.Tables(1).Rows(1).Cells(1).Select
+    ActiveDocument.Tables(1).Rows(1).Cells(1).Range.Collapse direction:=wdStart
+    Rem Selection.SplitTable
+    wUnits = Selection.Move(Unit:=wdCharacter, Count:=-2)
+    Rem Dim rngTemp As Word.Range
+
+Rem Set rngTemp = ActiveDocument.Range
+
+Rem With rngTemp
+
+    Rem .InsertBefore "This is my sample text"
+    Rem .Font.Name = "Tahoma"
+    Rem .Font.Size = 11
+    Rem .InsertParagraphAfter
+Rem End With
+Rem Next
+End Sub
+
+
+Public Sub putsectionheader()
+Dim tabcount As Integer
+tabcount = ActiveDocument.Tables.Count
+
+Dim oTable As Table
+Dim oCell As Range
+Dim oRng As Range
+
+For i = 1 To tabcount
+ActiveDocument.Tables(i).Select
+Set oTable = ActiveDocument.Tables(i)
+Set oRng = oTable.Range
+oRng.Collapse
+oRng.InsertParagraphBefore
+Rem oRng.Begin = oRng.End + 1
+Rem oRng.Collapse wdCollapseStart
+Set oCell = ActiveDocument.Tables(i).Cell(1, 1).Range
+oCell.End = oCell.End - 1
+oRng.Text = oCell.Text
+Debug.Print "Doing"
+Next
+
+End Sub
+
+Public Sub sendkeytest()
+Dim tabcount As Integer
+tabcount = ActiveDocument.Tables.Count
+
+Dim oTable As Table
+Dim oCell As Range
+Dim oRng As Range
+
+For i = 1 To tabcount
+ActiveDocument.Tables(i).Select
+SendKeys ("{UP}")
+Set oTable = ActiveDocument.Tables(i)
+Set oRng = oTable.Range
+oRng.Collapse wdCollapseStart
+oRng.Start = oRng.Start - 1
+oRng.Text = "Hello"
+Debug.Print "Doing"
+Next
+
+End Sub
+Sub InsertBeforeEachTable()
+Dim oTable As Table
+Dim i As Long
+Dim oCell As Range
+Dim oRng As Range
+Dim txt As String
+    With ActiveDocument
+        For i = .Tables.Count To 1 Step -1
+            Set oTable = .Tables(i)
+            Set oRng = oTable.Range
+            
+            Set oCell = oTable.Cell(1, 2).Range
+            oCell.End = oCell.End - 1
+            txt = oCell.FormattedText
+            oRng.Cut
+            Rem oRng.Collapse 0
+            Rem oRng.InsertParagraphBefore
+            Rem oRng.End = oRng.End - 1
+            Rem oRng.Collapse 1
+            oRng.InsertBefore txt & vbCr
+            oRng.Move wdParagraph, 1
+            oRng.Paste
+            
+        Next i
+    End With
+lbl_Exit:
+    Exit Sub
+End Sub
+
+Sub InsertAfter()
+    Dim wrd As String
+    Dim rng As Range
+
+    wrd = "End"
+
+    Set rng = Selection.Range
+
+    rng.InsertAfter wrd
+
+    '~~> Remove selection. This will move the cursor at end of selected word
+    Selection.MoveRight Unit:=wdCharacter, Count:=1
+    '~~> Select the inserted word
+    Selection.MoveRight Unit:=wdCharacter, Count:=Len(wrd), Extend:=wdExtend
+    '~~> Change Style
+    Selection.Style = ActiveDocument.Styles("List Paragraph")
+End Sub
+
+Sub InsertBefore()
+    Dim wrd As String
+    Dim rng As Range
+
+    wrd = "Start"
+
+    Set rng = Selection.Range
+
+    rng.InsertBefore wrd
+
+    '~~> Remove selection. This will move the cursor at begining of inserted word
+    Selection.MoveLeft Unit:=wdCharacter, Count:=1
+    '~~> Select the inserted word
+    Selection.MoveRight Unit:=wdCharacter, Count:=Len(wrd), Extend:=wdExtend
+    '~~> Change Style
+    Selection.Style = ActiveDocument.Styles("List Paragraph")
+End Sub
+
