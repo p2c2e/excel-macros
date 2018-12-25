@@ -91,12 +91,14 @@ Dim txt As String
             Set oCell = oTable.Cell(1, 2).Range
             oCell.End = oCell.End - 1
             txt = oCell.FormattedText
+            Rem txt.Style = "Heading 2"
             oRng.Cut
             Rem oRng.Collapse 0
             Rem oRng.InsertParagraphBefore
             Rem oRng.End = oRng.End - 1
             Rem oRng.Collapse 1
             oRng.InsertBefore txt & vbCr
+            oRng.Style = "Heading 2"
             oRng.Move wdParagraph, 1
             oRng.Paste
             
